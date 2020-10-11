@@ -1,8 +1,17 @@
+.tilemap {
+  background-image: url('../../assets/wave.svg');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  height: 100vh;
+}
+
 .tilemap-information {
+  padding-top: 40px;
   text-align: center;
 }
 
 .tilemap-information h1 {
+  margin-top: 0px;
   margin-bottom: 55px;
 }
 
@@ -43,7 +52,8 @@
 }
 
 .preview-container.collapsed {
-  width: 25px;
+  width: 55px;
+  padding: 0;
 }
 
 .preview-container.collapsed .preview-tilemap canvas {
@@ -118,6 +128,10 @@
 
 .image-preview-container {
   text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  width: 900px;
+  margin: auto;
 }
 
 .image-preview-container .file-change {
@@ -132,7 +146,6 @@
 }
 
 .image-preview-container button {
-  margin: auto;
   margin-top: 10px;
   width: 250px;
 }
@@ -148,6 +161,10 @@
   margin-top: 20px;
 }
 
+.main-container canvas {
+  background-color: white;
+}
+
 .container-controls {
   margin-bottom: 10px;
 }
@@ -159,16 +176,22 @@
 
 .preview-container.collapsed .container-controls button,
 .preview-container.collapsed .pixel-information button {
-  margin: unset;
-  width: unset;
-  padding: 5px;
+  width: auto;
+  padding: 5px 15px;
 }
 
 .pixel-information button {
   margin: auto;
   opacity: .5;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .pixel-information .solid {
   opacity: 1;
+}
+
+.tools button {
+  margin: auto;
+  font-weight: bold;
 }

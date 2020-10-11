@@ -1,5 +1,6 @@
 // External Imports
 import React, { useRef, useState } from 'react';
+// import "nes.css/css/nes.min.css";
 
 
 // Internal Imports
@@ -15,6 +16,9 @@ let currentMap = {};
 
 // Component Definition
 const Upload = () => {
+  const [currentTool, setCurrentTool] = useState({
+    type: 'brush',
+  });
   const [isWindowExtended, setIsWindowExtended] = useState(true);
   const [hasInputedDimensions, setHasInputedDimensions] = useState(false);
   const [mapDimensions, setMapDimensions] = useState({
@@ -66,33 +70,33 @@ const Upload = () => {
     const index = (posY * 40) + posX;
     const data = context.getImageData(posX  * 16, posY  * 16, 16, 16);
     setCurrentPixel({ index, data, state: isSolidPixel });
-    //highlightSelection(context, posX, posY);
+    highlightSelection(context, posX, posY);
   };
 
-  // const highlightSelection = (context, posX, posY) => {
-  //   let x = posX * 16;
-  //   let y = posY * 16;
+  const highlightSelection = (context, posX, posY) => {
+    let x = posX * 16;
+    let y = posY * 16;
 
-  //   // TODO: clear previous selection without removing image?
-  //   context.clearRect(0, 0, tilemapDimensions.width, tilemapDimensions.height);
-  //   const image = new Image();
-  //   image.onload = () => {
-  //     context.drawImage(image, 0, 0);
-  //     context.beginPath();
-  //     context.moveTo(x, y);
-  //     y = y + 16;
-  //     context.lineTo(x, y);
-  //     x = x + 16;
-  //     context.lineTo(x, y);
-  //     y = y - 16;
-  //     context.lineTo(x, y);
-  //     x = x - 16;
-  //     context.lineTo(x, y);
-  //     context.strokeStyle = "#616103";
-  //     context.stroke();
-  //   }
-  //   image.src = imagePath;
-  // };
+    context.clearRect(0, 0, tilemapDimensions.width, tilemapDimensions.height);
+    const image = new Image();
+    image.onload = () => {
+      context.drawImage(image, 0, 0);
+      context.beginPath();
+      context.moveTo(x, y);
+      y = y + 16;
+      context.lineTo(x, y);
+      x = x + 16;
+      context.lineTo(x, y);
+      y = y - 16;
+      context.lineTo(x, y);
+      x = x - 16;
+      context.lineTo(x, y);
+      context.lineWidth = 2;
+      context.strokeStyle = "#FF0000";
+      context.stroke();
+    }
+    image.src = imagePath;
+  };
 
   const exportMap = () => {   
     let mWidth = mapDimensions.width;
@@ -107,17 +111,26 @@ const Upload = () => {
   };
 
   const drop = (event) => {
+    if (currentPixel.index === undefined) {
+      return;
+    }
+
     if (isMouseDown || event.type === 'click') {
       const context = tilesetCanvasRef.current.getContext('2d');
       const rect = tilesetCanvasRef.current.getBoundingClientRect();
       const posX = Math.floor((event.clientX - rect.left) / 16);
       const posY = Math.floor((event.clientY - rect.top) / 16);
       const mapIndex = (posY * 40) + posX;
-      context.putImageData(currentPixel.data, posX * 16, posY * 16);
-      currentMap[mapIndex] = {
-        index: currentPixel.index,
-        state: currentPixel.state,
-      };
+
+      if (currentTool.type === 'eraser') {
+        context.clearRect(posX * 16, posY * 16, mapDimensions.block, mapDimensions.block);
+      } else {
+        context.putImageData(currentPixel.data, posX * 16, posY * 16);
+        currentMap[mapIndex] = {
+          index: currentPixel.index,
+          state: currentPixel.state,
+        };
+      }
     }
   };
 
@@ -142,7 +155,7 @@ const Upload = () => {
       mapDimensions.width % mapDimensions.block !== 0 || 
       mapDimensions.height % mapDimensions.block !== 0
     ) {
-      setErrorMessage('Your dimensions has to match with your block size');
+      setErrorMessage('Your dimensions have to match with your block size');
       return;
     }
 
@@ -166,6 +179,11 @@ const Upload = () => {
     const context = tilesetCanvasRef.current.getContext('2d');
     context.clearRect(0, 0, mapDimensions.width, mapDimensions.height);
     currentMap = {};
+  };
+
+  const setMode = () => {
+    const tool = currentTool.type === 'brush' ? 'eraser' : 'brush';
+    setCurrentTool({ type: tool });
   };
 
   return (
@@ -246,6 +264,15 @@ const Upload = () => {
                 </button>
               </div>
             )}
+            { isImageAvailable &&
+              <div className="tools">
+                <button onClick={setMode}>
+                  { currentTool.type === 'brush' ? 
+                    (isWindowExtended ? 'Brush' : 'B') : 
+                    (isWindowExtended ? 'Eraser' : 'E')
+                  }
+                </button>
+              </div> }
           </div>
         </div>      
       )}
@@ -258,7 +285,7 @@ const Upload = () => {
           onClick={(e) => drop(e)}
           ref={tilesetCanvasRef}
           width={mapDimensions.width}
-          height={mapDimensions.height}
+          height={hasInputedDimensions ? mapDimensions.height : '0px'}
           style={{ border: hasInputedDimensions ? '1px solid black' : ''}}
         />
       </div>
@@ -284,4 +311,8 @@ TODO:
 3. add rootreducer to manage state
 4. refactor code (better naming conventions and better abstraction)
 5. erase method
+6. add selector on map hover
+7. add tools (eraser, bucket, etc)
+8. large selection
+9. use classnames
 */
