@@ -1,0 +1,174 @@
+.tilemap-information {
+  text-align: center;
+}
+
+.tilemap-information h1 {
+  margin-bottom: 55px;
+}
+
+.tilemap-information input {
+  height: 30px;
+  border: none;
+  border-bottom: 2px solid #d6d6d682;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.tilemap-information input:first-of-type {
+  margin-right: 10px;
+}
+
+.tilemap-information input[name='block'] {
+  margin-top: 25px;
+}
+
+.tilemap-information button {
+  margin: auto;
+  margin-top: 55px;
+  width: 100px;
+}
+
+.preview-container {
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding: 0 15px;
+  border-left: 2px solid #a2a2a2;
+  box-shadow: -1px 4px 4px 0px #948181;
+  z-index: 5;
+  background-color: white;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.preview-container.collapsed {
+  width: 25px;
+}
+
+.preview-container.collapsed .preview-tilemap canvas {
+  display: none;
+}
+
+.preview-tilemap {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.content-selection-container {
+  margin-top: 2em;
+}
+
+.content-selection-container .image-upload {
+  text-align: center;
+}
+
+.content-selection-container .image-upload label {
+  display: flex;
+  align-items: center;
+  padding: 5px 0px;
+  color: #8a8a8a;
+  font-weight: 500;
+  justify-content: center;
+  font-size: 13.35px;
+}
+
+.content-selection-container .image-upload label:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.content-selection-container .image-upload label svg {
+  margin: 0 5px;
+}
+
+.content-selection-container .image-upload label:hover svg rect,
+.content-selection-container .image-upload label:hover svg circle,
+.content-selection-container .image-upload label:hover svg polyline {
+  stroke: black;
+}
+
+.content-selection-container .image-upload .file-selection {
+  display: none;
+}
+
+.content-selection-container .image-upload .selection-choice {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1em;
+  text-transform: uppercase;
+  margin: 0.5em 0;
+  opacity: 0.8;
+}
+
+.content-selection-container .image-upload .url-selection {
+  border: none;
+  padding: 5px 10px;
+  text-align: center;
+  border-bottom: 2px solid #4a464624;
+  outline: 0;
+  width: 75%;
+}
+
+.error-message {
+  margin-top: 20px;
+  color: #f84d4d;
+  font-weight: 500;
+}
+
+.image-preview-container {
+  text-align: center;
+}
+
+.image-preview-container .file-change {
+  margin: 1em;
+  font-style: italic;
+  font-weight: 400;
+  color: #000000d9;
+}
+
+.image-preview-container .file-change:hover {
+  cursor: pointer;
+}
+
+.image-preview-container button {
+  margin: auto;
+  margin-top: 10px;
+  width: 250px;
+}
+
+.output {
+  width: 640px;
+  overflow-wrap: break-word;
+  text-align: left;
+}
+
+.main-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.container-controls {
+  margin-bottom: 10px;
+}
+
+.container-controls button {
+  margin: auto;
+  width: 150px;
+}
+
+.preview-container.collapsed .container-controls button,
+.preview-container.collapsed .pixel-information button {
+  margin: unset;
+  width: unset;
+  padding: 5px;
+}
+
+.pixel-information button {
+  margin: auto;
+  opacity: .5;
+}
+
+.pixel-information .solid {
+  opacity: 1;
+}
