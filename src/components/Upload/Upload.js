@@ -128,7 +128,7 @@ const Upload = () => {
       const rect = tilesetCanvasRef.current.getBoundingClientRect();
       const posX = Math.floor((event.clientX - rect.left) / 16);
       const posY = Math.floor((event.clientY - rect.top) / 16);
-      const mapIndex = (posY * 40) + posX;
+      const mapIndex = (posY * (mapDimensions.width / mapDimensions.block)) + posX;
 
       if (currentTool.type === 'eraser') {
         context.clearRect(posX * mapDimensions.block, posY * mapDimensions.block, mapDimensions.block, mapDimensions.block);
@@ -188,9 +188,7 @@ const Upload = () => {
     currentMap = {};
   };
 
-  const setSelectionIndex = () => {
-
-  }
+  const setSelectionIndex = () => {}
 
   return (
     <div className="tilemap">
