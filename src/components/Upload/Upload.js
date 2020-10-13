@@ -1,10 +1,14 @@
 // External Imports
 import React, { useRef, useState } from 'react';
-// import "nes.css/css/nes.min.css";
 
 
 // Internal Imports
-import { imageIcon, maximizeIcon } from '../../assets/icons.js';
+import {
+  imageIcon,
+  maximizeIcon,
+  brushIcon,
+  eraserIcon,
+} from '../../assets/icons.js';
 import './Upload.css';
 
 
@@ -16,9 +20,7 @@ let currentMap = {};
 
 // Component Definition
 const Upload = () => {
-  const [currentTool, setCurrentTool] = useState({
-    type: 'brush',
-  });
+  const [currentTool, setCurrentTool] = useState({ type: 'brush' });
   const [isWindowExtended, setIsWindowExtended] = useState(true);
   const [hasInputedDimensions, setHasInputedDimensions] = useState(false);
   const [mapDimensions, setMapDimensions] = useState({
@@ -62,13 +64,18 @@ const Upload = () => {
     }
   };
 
+  const getIndexPosition = (event) => {
+    const rect = previewCanvasRef.current.getBoundingClientRect();
+    const posX = Math.floor((event.clientX - rect.left) / mapDimensions.block);
+    const posY = Math.floor((event.clientY - rect.top) / mapDimensions.block);
+    return { posX, posY };
+  };
+
   const pick = (event) => {
     const context = previewCanvasRef.current.getContext('2d');
-    const rect = previewCanvasRef.current.getBoundingClientRect();
-    const posX = Math.floor((event.clientX - rect.left) / 16);
-    const posY = Math.floor((event.clientY - rect.top) / 16);
+    const { posX, posY } = getIndexPosition(event);
     const index = (posY * 40) + posX;
-    const data = context.getImageData(posX  * 16, posY  * 16, 16, 16);
+    const data = context.getImageData(posX  * mapDimensions.block, posY  * mapDimensions.block, mapDimensions.block, mapDimensions.block);
     setCurrentPixel({ index, data, state: isSolidPixel });
     highlightSelection(context, posX, posY);
   };
@@ -77,6 +84,7 @@ const Upload = () => {
     let x = posX * 16;
     let y = posY * 16;
 
+    // TODO: save data to avoid unecessary re-loading
     context.clearRect(0, 0, tilemapDimensions.width, tilemapDimensions.height);
     const image = new Image();
     image.onload = () => {
@@ -99,18 +107,18 @@ const Upload = () => {
   };
 
   const exportMap = () => {   
-    let mWidth = mapDimensions.width;
-    let mHeight = mapDimensions.height;
-    let bSize = mapDimensions.block;
+    const mWidth = mapDimensions.width;
+    const mHeight = mapDimensions.height;
+    const bSize = mapDimensions.block;
 
-    let string = `${mWidth},${mHeight},`; 
+    let string = `${mWidth} ${mHeight} `; 
     for (let i = 0; i < ((mWidth / bSize) * (mHeight / bSize)); i++) {
-      string += currentMap[i] ? `${currentMap[i].index},${currentMap[i].state ? '1' : '0'},` : '-1,'; 
+      string += currentMap[i] ? `${currentMap[i].index} ${currentMap[i].state ? '1' : '0'} ` : '-1 0 '; 
     }
     return string;
   };
 
-  const drop = (event) => {
+  const paint = (event) => {
     if (currentPixel.index === undefined) {
       return;
     }
@@ -123,9 +131,15 @@ const Upload = () => {
       const mapIndex = (posY * 40) + posX;
 
       if (currentTool.type === 'eraser') {
-        context.clearRect(posX * 16, posY * 16, mapDimensions.block, mapDimensions.block);
+        context.clearRect(posX * mapDimensions.block, posY * mapDimensions.block, mapDimensions.block, mapDimensions.block);
       } else {
-        context.putImageData(currentPixel.data, posX * 16, posY * 16);
+        context.putImageData(currentPixel.data, posX * mapDimensions.block, posY * mapDimensions.block);
+        if (isSolidPixel) {
+          context.globalAlpha=0.62;
+          context.globalCompositeOperation="source-atop";
+          context.fillStyle="red";
+          context.fillRect(posX * 16, posY * 16, 16, 16);
+        }
         currentMap[mapIndex] = {
           index: currentPixel.index,
           state: currentPixel.state,
@@ -142,19 +156,12 @@ const Upload = () => {
   }
 
   const submitDimensions = () => {
-    if (
-      isNaN(mapDimensions.width) ||
-      isNaN(mapDimensions.height) ||
-      isNaN(mapDimensions.block)
-    ) {
+    if (isNaN(mapDimensions.width) || isNaN(mapDimensions.height) || isNaN(mapDimensions.block)) {
       setErrorMessage('Your input is incorrect, please enter a numerical value');
       return;
     }
 
-    if (
-      mapDimensions.width % mapDimensions.block !== 0 || 
-      mapDimensions.height % mapDimensions.block !== 0
-    ) {
+    if (mapDimensions.width % mapDimensions.block !== 0 || mapDimensions.height % mapDimensions.block !== 0) {
       setErrorMessage('Your dimensions have to match with your block size');
       return;
     }
@@ -163,12 +170,12 @@ const Upload = () => {
   };
 
   const copyToClipboard = () => {
-    const el = document.createElement('textarea');
-    el.value = exportMap();
-    document.body.appendChild(el);
-    el.select();
+    const text = document.createElement('textarea');
+    text.value = exportMap();
+    document.body.appendChild(text);
+    text.select();
     document.execCommand('copy');
-    document.body.removeChild(el);
+    document.body.removeChild(text);
     setHasBeenCopiedToClipboard(true);
     setTimeout(() => {
       setHasBeenCopiedToClipboard(false);
@@ -181,10 +188,9 @@ const Upload = () => {
     currentMap = {};
   };
 
-  const setMode = () => {
-    const tool = currentTool.type === 'brush' ? 'eraser' : 'brush';
-    setCurrentTool({ type: tool });
-  };
+  const setSelectionIndex = () => {
+
+  }
 
   return (
     <div className="tilemap">
@@ -236,6 +242,8 @@ const Upload = () => {
             <canvas
               ref={previewCanvasRef}
               onClick={pick}
+              onMouseDown={(e) => setSelectionIndex({ down: getIndexPosition(e)})}
+              onMouseUp={(e) => setSelectionIndex({ up: getIndexPosition(e)})}
               width={tilemapDimensions.width}
               height={tilemapDimensions.height}
             />
@@ -257,20 +265,23 @@ const Upload = () => {
                     setIsSolidPixel((state) => !state)
                   }}
                 >
-                  { isSolidPixel ? 
-                    (isWindowExtended ? 'Solid' : 'S') : 
-                    (isWindowExtended ? 'Not Solid' : 'NS')
-                  }
+                  { isWindowExtended ? 'Solid' : 'S'}
                 </button>
               </div>
             )}
             { isImageAvailable &&
               <div className="tools">
-                <button onClick={setMode}>
-                  { currentTool.type === 'brush' ? 
-                    (isWindowExtended ? 'Brush' : 'B') : 
-                    (isWindowExtended ? 'Eraser' : 'E')
-                  }
+                <button
+                  className={currentTool.type === 'brush' ? 'selected' : ''}
+                  onClick={() => setCurrentTool({ type: 'brush' })}
+                >
+                  {brushIcon}
+                </button>
+                <button
+                  className={currentTool.type === 'eraser' ? 'selected' : ''}
+                  onClick={() => setCurrentTool({ type: 'eraser' })}
+                >
+                  {eraserIcon}
                 </button>
               </div> }
           </div>
@@ -281,8 +292,8 @@ const Upload = () => {
           onMouseDown={() => setMouseDown(true)}
           onMouseUp={() => setMouseDown(false)}
           onMouseOut={() => setMouseDown(false)}
-          onMouseMove={(e) => drop(e)}
-          onClick={(e) => drop(e)}
+          onMouseMove={(e) => paint(e)}
+          onClick={(e) => paint(e)}
           ref={tilesetCanvasRef}
           width={mapDimensions.width}
           height={hasInputedDimensions ? mapDimensions.height : '0px'}
@@ -310,9 +321,7 @@ TODO:
 2. Add current selection
 3. add rootreducer to manage state
 4. refactor code (better naming conventions and better abstraction)
-5. erase method
 6. add selector on map hover
-7. add tools (eraser, bucket, etc)
 8. large selection
 9. use classnames
 */
