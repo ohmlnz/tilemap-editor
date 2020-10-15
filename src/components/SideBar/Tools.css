@@ -1,0 +1,53 @@
+.container-controls {
+  margin-bottom: 10px;
+}
+
+.container-controls button {
+  margin: auto;
+  width: 150px;
+}
+
+.preview-container.collapsed .container-controls button,
+.preview-container.collapsed .pixel-information button,
+.preview-container.collapsed .tools button {
+  padding: 5px 15px;
+  width: 100%;
+  height: 35px;
+  margin-bottom: 10px;
+}
+
+.pixel-information button {
+  margin: auto;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.pixel-information .solid {
+  background-color: #424040;
+  color: white;
+}
+
+.preview-container.collapsed .tools {
+  flex-direction: column;
+  width: auto;
+}
+
+.tools {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 300px;
+  margin: auto;
+}
+
+.tools button {
+  font-weight: bold;
+}
+
+.tools .selected {
+  background-color: #424040;
+}
+
+.tools .selected svg {
+  fill: white;
+}

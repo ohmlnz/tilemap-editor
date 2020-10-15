@@ -1,0 +1,37 @@
+.tilemap {
+  background-image: url('./assets/wave.svg');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  height: 100vh;
+}
+
+.image-preview-container {
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  width: 900px;
+  margin: auto;
+}
+
+.image-preview-container .file-change {
+  margin: 1em;
+  font-style: italic;
+  font-weight: 400;
+  color: #000000d9;
+}
+
+.image-preview-container .file-change:hover {
+  cursor: pointer;
+}
+
+.image-preview-container button {
+  margin-top: 10px;
+  width: 250px;
+}
+
+.output {
+  width: 640px;
+  overflow-wrap: break-word;
+  text-align: left;
+}
+

@@ -1,0 +1,38 @@
+.tilemap-information {
+  padding-top: 40px;
+  text-align: center;
+}
+
+.tilemap-information h1 {
+  margin-top: 0px;
+  margin-bottom: 55px;
+}
+
+.tilemap-information input {
+  height: 30px;
+  border: none;
+  border-bottom: 2px solid #d6d6d682;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.tilemap-information input:first-of-type {
+  margin-right: 10px;
+}
+
+.tilemap-information input[name='block'] {
+  margin-top: 25px;
+}
+
+.tilemap-information button {
+  margin: auto;
+  margin-top: 55px;
+  width: 100px;
+}
+
+.error-message {
+  margin-top: 20px;
+  color: #f84d4d;
+  font-weight: 500;
+}
