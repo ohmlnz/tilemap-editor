@@ -7,8 +7,9 @@ import './Tileset.css';
 
 
 // Component Definition
-const Tileset = ({ currentMap, dispatch, state, tilesetCanvasRef }) => {
+const Tileset = ({ dispatch, state, tilesetCanvasRef }) => {
   const {
+    currentMap,
     hasInputedDimensions,
     isMouseDown,
     isSolidBlock,
@@ -39,10 +40,13 @@ const Tileset = ({ currentMap, dispatch, state, tilesetCanvasRef }) => {
           context.fillStyle='red';
           context.fillRect(posX * 16, posY * 16, 16, 16);
         }
-        currentMap[mapIndex] = {
-          index: selectedBlock.index,
-          state: selectedBlock.state,
-        };
+        dispatch({
+          payload: currentMap[mapIndex] = {
+            index: selectedBlock.index,
+            state: selectedBlock.state,
+          },
+          type: 'SET_CURRENT_MAP'
+        });
       }
     }
   };

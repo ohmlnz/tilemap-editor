@@ -1,4 +1,5 @@
 const initialState = {
+  currentMap: {},
   errorMessage: '',
   hasInputedDimensions: false,
   imagePath: null,
@@ -23,25 +24,33 @@ const rootReducer = (state, action) => {
         ...state,
         selectedTool: action.payload,
       };
-    case 'SET_ERROR_MESSAGE':
-      return {
-        ...state,
-        errorMessage: action.payload,
-      }
-    case 'SET_IMAGE_PATH':
-      return {
-        ...state,
-        imagePath: action.payload,
-      }
-    case 'SET_IS_SOLID_BLOCK':
-      return {
-        ...state,
-        isSolidBlock: action.payload,
-      }
     case 'SET_COPIED_TO_CLIPBOARD':
       return {
         ...state,
         isCopiedToClipboard: action.payload,
+      };
+    case 'SET_CURRENT_MAP':
+      return {
+        ...state,
+        currentMap: {
+          ...state.currentMap,
+          ...action.payload,
+        }
+      }
+    case 'SET_ERROR_MESSAGE':
+      return {
+        ...state,
+        errorMessage: action.payload,
+      };
+    case 'SET_IMAGE_PATH':
+      return {
+        ...state,
+        imagePath: action.payload,
+      };
+    case 'SET_IS_SOLID_BLOCK':
+      return {
+        ...state,
+        isSolidBlock: action.payload,
       };
     case 'SET_MAP_DIMENSIONS':
       return {
@@ -56,6 +65,18 @@ const rootReducer = (state, action) => {
         ...state,
         isMouseDown: action.payload,
       };
+    case 'SET_SELECTED_BLOCK':
+      return {
+        ...state,
+        selectedBlock: {
+          ...action.payload,
+        }
+      };
+    case 'SET_SIDEBAR_STATE':
+      return {
+        ...state,
+        isSidebarExtended: action.payload,
+      };
     case 'SET_TILEMAP_DIMENSIONS':
       return {
         ...state,
@@ -63,23 +84,11 @@ const rootReducer = (state, action) => {
           ...action.payload,
         }
       };
-    case 'SET_SELECTED_BLOCK':
-      return {
-        ...state,
-        selectedBlock: {
-          ...action.payload,
-        }
-      }
-    case 'SET_SIDEBAR_STATE':
-      return {
-        ...state,
-        isSidebarExtended: action.payload,
-      };
     case 'SET_INPUTED_DIMENSIONS':
       return {
         ...state,
         hasInputedDimensions: action.payload
-      }
+      };
     default:
       return state;
   }

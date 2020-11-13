@@ -3,14 +3,14 @@ import React, { useRef } from 'react';
 
 
 // Internal Imports
-import Tools from './Tools';
-import { imageIcon } from '../../assets/icons';
 import './SideBar.css';
+import { imageIcon } from '../../assets/icons';
+import Tools from './Tools';
 
 
 // Local Constants
-const MAX_UPLOAD_SIZE = 10000000;
 const ACCEPTED_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
+const MAX_UPLOAD_SIZE = 10000000;
 
 
 // Component Definition
@@ -25,7 +25,7 @@ const SideBar = ({ dispatch, state }) => {
   const isImageAvailable = Boolean(imagePath);
   const previewCanvasRef = useRef(null);
 
-  // TODO: image selection should happen within DimensionForm (which will then have to be renamed, like Setup?)
+  // TODO: image selection should happen within Setup
   const selectFile = (e) => {
     const file = e.target.files[0];
     if (file.size >= MAX_UPLOAD_SIZE) {
@@ -41,7 +41,7 @@ const SideBar = ({ dispatch, state }) => {
           dispatch({ payload: {
             height: image.height,
             width: image.width,
-          }, type: 'SET_TILEMAP_DIMENSIONS'});
+          }, type: 'SET_TILEMAP_DIMENSIONS' });
           context.drawImage(image, 0, 0);
         }
         image.src = reader.result;

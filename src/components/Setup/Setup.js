@@ -1,22 +1,25 @@
 // External Imports
-import React from 'react';
+import React, { useEffect } from 'react';
 
 
 // Internal Imports
-import './DimensionsForm.css';
+import './Setup.css';
 
 
 // Component Definition
-const DimensionsForm = ({ dispatch, state }) => {
+const Setup = ({ dispatch, state }) => {
   const { errorMessage, mapDimensions } = state;
+  const haveInputFieldsBeenFilled = Object.values(mapDimensions).filter(Boolean).length === 3;
 
   const setDimensions = (event) => {
-    dispatch({ payload: {
-      [event.target.name]: event.target.value,
-    }, type: 'SET_MAP_DIMENSIONS' })
+    dispatch({
+      payload: {
+        [event.target.name]: event.target.value,
+      },
+      type: 'SET_MAP_DIMENSIONS',
+    })
   }
 
-  // TODO: should be able to validate form when pressing enter
   const submitDimensions = () => {
     if (isNaN(mapDimensions.width) || isNaN(mapDimensions.height) || isNaN(mapDimensions.block)) {
       dispatch({ payload: 'Your input is incorrect, please enter a numerical value', type: 'SET_ERROR_MESSAGE' })
@@ -28,6 +31,17 @@ const DimensionsForm = ({ dispatch, state }) => {
       dispatch({ payload: true, type: 'SET_INPUTED_DIMENSIONS' });
     }
   };
+
+  const handleReturnKey = (event) => {
+    if (event.keyCode === 13) {
+      submitDimensions();
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleReturnKey);
+    return () => window.removeEventListener('keydown', handleReturnKey);
+  }, [mapDimensions]);
 
   return (
     <div className="tilemap-information">
@@ -54,10 +68,15 @@ const DimensionsForm = ({ dispatch, state }) => {
         name="block"
         value={mapDimensions.block}
       />
-      <button onClick={submitDimensions}>Submit</button>
+      <button
+        disabled={!haveInputFieldsBeenFilled}
+        onClick={submitDimensions}
+      >
+        Submit
+      </button>
       <div className="error-message">{errorMessage}</div>
     </div>
   );
 };
 
-export default DimensionsForm;
+export default Setup;

@@ -7,8 +7,9 @@ import './Export.css';
 
 
 // Component Definition
-const Export = ({ currentMap, dispatch, state, tilesetCanvasRef }) => {
+const Export = ({ dispatch, state, tilesetCanvasRef }) => {
   const {
+    currentMap,
     hasInputedDimensions,
     isCopiedToClipboard,
     mapDimensions,
@@ -42,7 +43,7 @@ const Export = ({ currentMap, dispatch, state, tilesetCanvasRef }) => {
   const clearCanvas = () => {
     const context = tilesetCanvasRef.current.getContext('2d');
     context.clearRect(0, 0, mapDimensions.width, mapDimensions.height);
-    currentMap = {};
+    dispatch({ payload: {}, type: 'SET_CURRENT_MAP' });
   };
 
   return (
