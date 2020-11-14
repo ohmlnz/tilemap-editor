@@ -2,7 +2,6 @@ const initialState = {
   currentMap: {},
   errorMessage: '',
   hasInputedDimensions: false,
-  imagePath: null,
   isCopiedToClipboard: false,
   isMouseDown: false,
   isSidebarExtended: true,
@@ -15,6 +14,7 @@ const initialState = {
   selectedBlock: {},
   selectedTool: 'brush',
   tilemapDimensions: {},
+  tileset: null,
 };
 
 const rootReducer = (state, action) => {
@@ -42,10 +42,10 @@ const rootReducer = (state, action) => {
         ...state,
         errorMessage: action.payload,
       };
-    case 'SET_IMAGE_PATH':
+    case 'SET_INPUTED_DIMENSIONS':
       return {
         ...state,
-        imagePath: action.payload,
+        hasInputedDimensions: action.payload
       };
     case 'SET_IS_SOLID_BLOCK':
       return {
@@ -84,10 +84,10 @@ const rootReducer = (state, action) => {
           ...action.payload,
         }
       };
-    case 'SET_INPUTED_DIMENSIONS':
+    case 'SET_TILESET':
       return {
         ...state,
-        hasInputedDimensions: action.payload
+        tileset: action.payload,
       };
     default:
       return state;

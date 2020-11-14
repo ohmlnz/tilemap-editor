@@ -12,7 +12,7 @@ import './Tools.css';
 
 
 // Component Definition
-const Tools = ({ dispatch, isImageAvailable, state }) => {
+const Tools = ({ dispatch, isTilesetAvailable, state }) => {
   const {
     isSidebarExtended,
     isSolidBlock,
@@ -22,7 +22,7 @@ const Tools = ({ dispatch, isImageAvailable, state }) => {
 
   return (
     <>
-    { isImageAvailable &&
+    { isTilesetAvailable &&
       <div className="container-controls">
         { !isSidebarExtended ? 
         <button onClick={() => dispatch({ payload: true, type: 'SET_SIDEBAR_STATE' })}>
@@ -49,7 +49,7 @@ const Tools = ({ dispatch, isImageAvailable, state }) => {
         </button>
       </div>
     )}
-    { isImageAvailable &&
+    { isTilesetAvailable &&
       <div className="tools">
         <button
           className={selectedTool === 'brush' ? 'selected' : ''}

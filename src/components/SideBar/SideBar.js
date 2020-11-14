@@ -16,13 +16,13 @@ const MAX_UPLOAD_SIZE = 10000000;
 // Component Definition
 const SideBar = ({ dispatch, state }) => {
   const {
-    imagePath,
     isSidebarExtended,
     isSolidBlock,
     mapDimensions,
     tilemapDimensions,
+    tileset,
   } = state;
-  const isImageAvailable = Boolean(imagePath);
+  const isTilesetAvailable = Boolean(tileset);
   const previewCanvasRef = useRef(null);
 
   // TODO: image selection should happen within Setup
@@ -45,7 +45,7 @@ const SideBar = ({ dispatch, state }) => {
           context.drawImage(image, 0, 0);
         }
         image.src = reader.result;
-        dispatch({ payload: reader.result, type: 'SET_IMAGE_PATH' });
+        dispatch({ payload: image, type: 'SET_TILESET' });
       });
       reader.readAsDataURL(file);
     }
@@ -62,32 +62,29 @@ const SideBar = ({ dispatch, state }) => {
     let x = posX * 16;
     let y = posY * 16;
 
-    // TODO: save data to avoid unecessary re-loading
     context.clearRect(0, 0, tilemapDimensions.width, tilemapDimensions.height);
-    const image = new Image();
-    image.onload = () => {
-      context.drawImage(image, 0, 0);
-      context.beginPath();
-      context.moveTo(x, y);
-      y = y + 16;
-      context.lineTo(x, y);
-      x = x + 16;
-      context.lineTo(x, y);
-      y = y - 16;
-      context.lineTo(x, y);
-      x = x - 16;
-      context.lineTo(x, y);
-      context.lineWidth = 2;
-      context.strokeStyle = "#FF0000";
-      context.stroke();
-    }
-    image.src = imagePath;
+    context.drawImage(tileset, 0, 0);
+    context.beginPath();
+    context.moveTo(x, y);
+    y = y + 16;
+    context.lineTo(x, y);
+    x = x + 16;
+    context.lineTo(x, y);
+    y = y - 16;
+    context.lineTo(x, y);
+    x = x - 16;
+    context.lineTo(x, y);
+    context.lineWidth = 2;
+    context.strokeStyle = "#FF0000";
+    context.stroke();
   };
 
   const pick = (event) => {
     const context = previewCanvasRef.current.getContext('2d');
     const { posX, posY } = getIndexPosition(event);
     const index = (posY * 40) + posX;
+    context.clearRect(0, 0, tilemapDimensions.width, tilemapDimensions.height);
+    context.drawImage(tileset, 0, 0);
     const data = context.getImageData(posX  * mapDimensions.block, posY  * mapDimensions.block, mapDimensions.block, mapDimensions.block);
     dispatch({ payload: {
       index,
@@ -102,7 +99,7 @@ const SideBar = ({ dispatch, state }) => {
 
   return (
     <div className={`preview-container ${isSidebarExtended ? 'extended' : 'collapsed'}`}>
-      {!isImageAvailable && 
+      {!isTilesetAvailable && 
       <div className="content-selection-container">
         <div className="image-upload">
           <label htmlFor="image_to_upload">{imageIcon} Select a tilemap to upload</label>
@@ -127,7 +124,7 @@ const SideBar = ({ dispatch, state }) => {
         />
         <Tools
           dispatch={dispatch}
-          isImageAvailable={isImageAvailable}
+          isTilesetAvailable={isTilesetAvailable}
           state={state}
         />
       </div>

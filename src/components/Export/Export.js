@@ -28,12 +28,8 @@ const Export = ({ dispatch, state, tilesetCanvasRef }) => {
   };
 
   const copyToClipboard = () => {
-    const text = document.createElement('textarea');
-    text.value = exportMap();
-    document.body.appendChild(text);
-    text.select();
-    document.execCommand('copy');
-    document.body.removeChild(text);
+    const map = exportMap();
+    navigator.clipboard.writeText(map);
     dispatch({ payload: true, type: 'SET_COPIED_TO_CLIPBOARD' });
     setTimeout(() => {
       dispatch({ payload: false, type: 'SET_COPIED_TO_CLIPBOARD' });
