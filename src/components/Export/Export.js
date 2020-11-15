@@ -39,7 +39,7 @@ const Export = ({ dispatch, state, tilesetCanvasRef }) => {
   const clearCanvas = () => {
     const context = tilesetCanvasRef.current.getContext('2d');
     context.clearRect(0, 0, mapDimensions.width, mapDimensions.height);
-    dispatch({ payload: {}, type: 'SET_CURRENT_MAP' });
+    dispatch({ payload: {}, type: 'RESET_MAP' });
   };
 
   return (

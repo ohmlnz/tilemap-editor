@@ -19,6 +19,11 @@ const initialState = {
 
 const rootReducer = (state, action) => {
   switch (action.type) {
+    case 'RESET_MAP':
+      return {
+        ...state,
+        currentMap: action.payload,
+      }
     case 'SELECT_TOOL':
       return {
         ...state,
