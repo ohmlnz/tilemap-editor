@@ -14,7 +14,7 @@ import Tileset from './components/Tileset/Tileset';
 // Component Definition
 const App = () => {
   const [state, dispatch] = useReducer(rootReducer, initialState);
-  const { hasInputedDimensions } = state;
+  const { hasInputedDimensions, tileset } = state;
   const tilesetCanvasRef = useRef(null);
 
   return (
@@ -35,11 +35,13 @@ const App = () => {
         state={state}
         tilesetCanvasRef={tilesetCanvasRef}
       />
-      <Export
-        dispatch={dispatch}
-        state={state}
-        tilesetCanvasRef={tilesetCanvasRef}
-      />
+      {tileset && (
+        <Export
+          dispatch={dispatch}
+          state={state}
+          tilesetCanvasRef={tilesetCanvasRef}
+        />
+      )}
     </div>
   );
 };

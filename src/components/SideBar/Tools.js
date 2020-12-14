@@ -14,6 +14,7 @@ import './Tools.css';
 // Component Definition
 const Tools = ({ dispatch, isTilesetAvailable, state }) => {
   const {
+    gridMode,
     isSidebarExtended,
     isSolidBlock,
     selectedBlock,
@@ -62,6 +63,12 @@ const Tools = ({ dispatch, isTilesetAvailable, state }) => {
           onClick={() => dispatch({ payload: 'eraser', type: 'SELECT_TOOL' })}
         >
           {eraserIcon}
+        </button>
+        <button
+          className={gridMode ? 'selected' : ''}
+          onClick={() => dispatch({ type: 'SET_GRID' })}
+          >
+          { isSidebarExtended ? 'Grid mode' : 'Grid'}
         </button>
       </div> }
     </>

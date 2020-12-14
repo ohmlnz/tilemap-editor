@@ -1,5 +1,5 @@
 // External Imports
-import React from 'react'
+import React, { useEffect } from 'react'
 
 
 // Internal Imports
@@ -10,6 +10,7 @@ import './Tileset.css';
 const Tileset = ({ dispatch, state, tilesetCanvasRef }) => {
   const {
     currentMap,
+    gridMode,
     hasInputedDimensions,
     isMouseDown,
     isSolidBlock,
@@ -51,6 +52,25 @@ const Tileset = ({ dispatch, state, tilesetCanvasRef }) => {
     }
   };
 
+  useEffect(() => {
+    if (hasInputedDimensions) {
+      const context = tilesetCanvasRef.current.getContext('2d');
+      context.beginPath();
+      for (let x = 0; x <= mapDimensions.width; x += mapDimensions.block) {
+        context.moveTo(x, 0);
+        context.lineTo(x, mapDimensions.height);
+      }
+
+      for (let x = 0; x <= mapDimensions.height; x += mapDimensions.block) {
+        context.moveTo(0, x);
+        context.lineTo(mapDimensions.width, x);
+      }
+      context.lineWidth = gridMode ? 1 : 2;
+      context.strokeStyle = gridMode ? 'black' : 'white';
+      context.stroke();
+    }
+  }, [hasInputedDimensions, gridMode, mapDimensions, tilesetCanvasRef]);
+
   return (
     <div className="main-container">
       <canvas
@@ -62,7 +82,7 @@ const Tileset = ({ dispatch, state, tilesetCanvasRef }) => {
         ref={tilesetCanvasRef}
         width={mapDimensions.width}
         height={hasInputedDimensions ? mapDimensions.height : '0px'}
-        style={{ border: hasInputedDimensions ? '1px solid black' : ''}}
+        style={{ border: hasInputedDimensions && !gridMode ? '1px solid black' : ''}}
       />
     </div>
   );

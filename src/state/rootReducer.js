@@ -1,6 +1,7 @@
 const initialState = {
   currentMap: {},
   errorMessage: '',
+  gridMode: false,
   hasInputedDimensions: false,
   isCopiedToClipboard: false,
   isMouseDown: false,
@@ -41,6 +42,11 @@ const rootReducer = (state, action) => {
           ...state.currentMap,
           ...action.payload,
         }
+      }
+    case 'SET_GRID':
+      return {
+        ...state,
+        gridMode: !state.gridMode
       }
     case 'SET_ERROR_MESSAGE':
       return {
